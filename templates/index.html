@@ -115,6 +115,12 @@
   /* Активная категория кейсов подсвечивается, остальные приглушены. */
   .chip{opacity:.55;box-shadow:inset 0 0 0 2px transparent;}
   .chip.active{opacity:1;box-shadow:inset 0 0 0 2px rgba(255,255,255,.9),0 7px 18px -8px rgba(0,0,0,.5);}
+  .case-box.case-box-image{height:clamp(125px,19vw,200px);background:radial-gradient(ellipse at 50% 70%,color-mix(in srgb,var(--case-color) 24%,transparent),transparent 70%);box-shadow:none;overflow:visible;}
+  .case-box.case-box-image::before,.case-box.case-box-image::after{display:none;}
+  .case-art{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 10px rgba(0,0,0,.25));transition:transform .22s ease;}
+  .case-card:hover .case-art{transform:translateY(-3px) scale(1.04);}
+  .case-free-note{position:relative;margin-top:4px;font-size:10px;font-weight:700;color:var(--text-muted);}
+  .case-modal-art{display:block;width:100%;max-width:260px;height:180px;object-fit:contain;margin:0 auto 10px;}
 </style>
 </head>
 <body>
@@ -306,8 +312,8 @@ function renderPageHead(){
         <button class="icon-btn-sq" data-action="open-settings">⚙️</button>
       </div>
       <div class="filter-row">
-        ${['Все','Популярные','Новые','Недорогие','Особые'].map((f,i)=>`
-          <button class="chip ${ui.caseFilter===f?'active':''}" data-action="set-case-filter" data-filter="${f}" style="background:${['#FF9A3D','#4EA1FF','#33D69F','#B15CFF','#FF6FD8'][i]}">${f}</button>
+        ${['Все','Бесплатные','Популярные','Новые','Недорогие','Особые'].map((f,i)=>`
+          <button class="chip ${ui.caseFilter===f?'active':''}" data-action="set-case-filter" data-filter="${f}" style="background:${['#FF9A3D','#6EE7D0','#4EA1FF','#33D69F','#B15CFF','#FF6FD8'][i]}">${f}</button>
         `).join('')}
       </div>
     </div>`;
@@ -343,8 +349,9 @@ function caseGridInner(){
         <div class="glow"></div>
         <div class="case-order">${index+1}</div>
         <div class="title">${c.name}</div>
-        <div class="case-box"><span class="case-icon">${c.icon}</span></div>
-        <div class="case-price">${fmt(c.price)} M</div>
+        <div class="case-box case-box-image"><img class="case-art" src="${c.image}" alt="3D-кейс ${escapeHtml(c.name)}" loading="lazy"></div>
+        <div class="case-price">${c.price === 0 ? 'БЕСПЛАТНО' : `${fmt(c.price)} M`}</div>
+        ${c.price === 0 ? '<div class="case-free-note">Без ограничений</div>' : ''}
         <div class="case-range"><span>ДРОП</span><b>${fmt(c.min_value)}–${fmt(c.max_value)} M</b></div>
       </div>
     `).join('');
@@ -648,23 +655,23 @@ function renderModal(){
 
   if(m.type==='confirmCase'){
     const c = CASES.find(x=>x.id===m.data.caseId);
-    title = 'Подтверждение покупки';
+    title = c && c.price === 0 ? 'Бесплатный кейс' : 'Подтверждение покупки';
     if(!c){
       body = `<div class="empty-state"><span class="em">⚠️</span>Кейс не найден.</div>`;
     } else {
       const enough = game.coins >= c.price;
       body = `
         <div class="result-card">
-          <div class="icon" style="--item-color:${c.color}">${c.icon}</div>
+          <img class="case-modal-art" src="${c.image}" alt="3D-кейс ${escapeHtml(c.name)}">
           <div class="name">${c.name}</div>
-          <div class="value">${fmt(c.price)} M</div>
+          <div class="value">${c.price === 0 ? 'БЕСПЛАТНО · БЕЗ ОГРАНИЧЕНИЙ' : `${fmt(c.price)} M`}</div>
           <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:2px">
             Диапазон дропа: ${fmt(c.min_value)}–${fmt(c.max_value)} M<br>
             Ваш баланс: ${fmt(game.coins)} M
           </div>
         </div>
         ${enough
-          ? `<button class="primary-btn" data-action="confirm-case-open" data-case="${c.id}">Подтвердить открытие за ${fmt(c.price)} M</button>`
+          ? `<button class="primary-btn" data-action="confirm-case-open" data-case="${c.id}">${c.price === 0 ? 'Открыть бесплатно' : `Подтвердить открытие за ${fmt(c.price)} M`}</button>`
           : `<button class="primary-btn" data-action="open-buy">Недостаточно монет — купить</button>`}
         <button class="settings-btn" data-action="close-modal" style="margin-top:8px;justify-content:center">Отмена</button>
       `;
