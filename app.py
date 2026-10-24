@@ -102,13 +102,32 @@ for number, filename in enumerate(CHARACTER_IMAGES, start=1):
         "value": CHARACTER_VALUES[number - 1],
     })
 
+NEW_CHARACTERS = [
+    ("rainbow_rider.png", "Радужный наездник", 1),
+    ("alien_vas.png", "Вась с другой планеты", 1),
+    ("fixing.png", "Я тоже фиксирую", 2),
+    ("cosmic_hoodie.png", "Космический худи", 2),
+    ("chekushka.png", "Чекушка", 3),
+    ("navi_veteran.png", "NAVI Ветеран", 4),
+    ("pepe_vatafa.png", "Свинка Пэпэ Ватафа", 5),
+    ("kridvetka.png", "Кридветка", 6),
+    ("otmorozok.png", "Родится отморозок", 7),
+    ("bread_dog.png", "Пёс с батоном", 8),
+    ("retro_soldier.png", "Ретро-солдат", 9),
+]
+for number, (filename, name, value) in enumerate(NEW_CHARACTERS, start=len(ITEM_POOL) + 1):
+    ITEM_POOL.append({
+        "id": f"character_{number}", "name": name, "type": "Персонаж",
+        "image": f"/static/characters/{filename}", "rarity": "trash", "value": value,
+    })
+
 # Кейсы намеренно идут от самого доступного к самому дорогому.
 # Диапазон выпадения — часть серверного правила, поэтому его нельзя подменить в браузере.
-# Правило цены: цена кейса = минимально возможный дроп × 1.4 (кейс всегда стоит
-# на 40% больше своего худшего исхода).
+# У бесплатного кейса цена 0 M; цены платных кейсов заданы отдельно ниже.
 # Категории («теги») нужны фильтрам на странице кейсов: клиент фильтрует
 # карточки именно по этому серверному списку, поэтому категории работают.
 CASES = [
+    {"id": "free", "name": "«БЕСПЛАТНЫЙ»", "price": 0, "color": "#6EE7D0", "icon": "🎁", "min_value": 1, "max_value": 9, "tags": ["Бесплатные", "Недорогие", "Новые"]},
     {"id": "bomzh", "name": "«БОМЖ»", "price": 70, "color": "#8D8F9A", "icon": "◇", "min_value": 10, "max_value": 95, "tags": ["Недорогие", "Популярные"]},
     {"id": "school_lunch", "name": "«ШКОЛЬНЫЙ ОБЕД»", "price": 120, "color": "#FFB347", "icon": "◆", "min_value": 50, "max_value": 170, "tags": ["Недорогие", "Новые"]},
     {"id": "rovny_vas", "name": "«РОВНЫЙ ВАСЬ»", "price": 200, "color": "#55A7FF", "icon": "✦", "min_value": 90, "max_value": 250, "tags": ["Недорогие", "Популярные"]},
@@ -118,6 +137,9 @@ CASES = [
     {"id": "worker", "name": "«ВОРКЕР»", "price": 1200, "color": "#33D69F", "icon": "⚙", "min_value": 520, "max_value": 1650, "tags": ["Новые", "Особые"]},
     {"id": "meme_case", "name": "«MEME CASE»", "price": 3500, "color": "#FFD76A", "icon": "✪", "min_value": 990, "max_value": 5000, "tags": ["Особые", "Популярные"]},
 ]
+
+for case in CASES:
+    case["image"] = f"/static/cases/{case['id']}.png"
 
 # Игровой прогресс намеренно остаётся in-memory для демо.
 GAME_DB = {}

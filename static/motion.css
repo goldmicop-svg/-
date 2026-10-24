@@ -1,0 +1,38 @@
+/* Restrained motion: weight, short travel, deliberate reveal. */
+.modal-open{overflow:hidden}
+.app-layout[data-motion="enter"] .page-enter{animation:screen-arrive .38s cubic-bezier(.2,.8,.2,1) both}
+.app-layout[data-motion="idle"] .hero-art>img{animation:chest-breathe 6s ease-in-out infinite}
+.app-layout[data-motion="enter"] .hero-art>img{animation:chest-arrive .8s cubic-bezier(.2,.8,.2,1) both,chest-breathe 6s .8s ease-in-out infinite}
+.hero-copy>*,.auth-card>*{animation:copy-arrive .48s cubic-bezier(.2,.8,.2,1) both}
+.hero-copy h1{animation-delay:70ms}.hero-copy p{animation-delay:120ms}.hero-actions{animation-delay:180ms}
+.app-layout[data-motion="idle"] .hero-copy>*{animation:none}
+.case-card{animation:case-arrive .5s cubic-bezier(.18,.8,.2,1) both;animation-delay:calc(min(var(--card-index,0),8)*45ms)}
+.case-card .case-price-arrow img,.primary-btn img:last-child,.text-btn img{transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.case-card:hover .case-price-arrow img,.primary-btn:hover img:last-child,.text-btn:hover img{transform:translateX(3px)}
+.nav-btn.active{animation:nav-settle .24s ease-out both}.nav-btn:not(.active):hover .ic{transform:translateY(-2px)}.nav-btn .ic{transition:transform .2s}
+.reveal-card{opacity:0;transform:translateY(17px);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--card-index,0)*35ms)}
+.reveal-card.is-visible{opacity:1;transform:none}
+.modal-sheet{transform-origin:50% 60%;animation:dialog-arrive .26s cubic-bezier(.16,.9,.2,1) both}
+.case-modal-art{animation:case-present .55s cubic-bezier(.2,.8,.2,1) both}
+.result-card{animation:drop-reveal .55s cubic-bezier(.16,.9,.25,1.15) both}
+.result-card .icon{position:relative;isolation:isolate}.result-card .icon:before{content:'';position:absolute;z-index:-1;inset:-25px 20%;background:radial-gradient(ellipse,color-mix(in srgb,var(--accent-orange) 20%,transparent),transparent 70%);animation:drop-glow .7s ease both}
+.result-success .icon{animation:success-settle .65s cubic-bezier(.2,.8,.2,1) both}.result-failure{animation:failure-settle .38s ease both}.result-failure .icon:before{background:none}
+.is-upgrading .workbench-heading .ui-icon{animation:energy-pulse .65s ease-in-out infinite alternate}.is-upgrading .wheel-shell{animation:energy-ring .7s ease-in-out infinite alternate}.is-upgrading .slot{animation:slot-pulse .7s ease-in-out infinite alternate}.is-upgrading .target-slot{animation-delay:180ms}
+.reel-marker{box-shadow:0 0 18px color-mix(in srgb,var(--accent) 50%,transparent)}.reel-outer.complete .winner{animation:winner-lock .45s ease-out both}.case-progress.running .bar span{animation-duration:var(--spin-duration,3500ms)}
+button:not(:disabled):active{transform:translateY(1px) scale(.985)}
+@keyframes screen-arrive{from{opacity:0;transform:translateX(var(--enter-x,18px))}to{opacity:1;transform:none}}
+@keyframes chest-arrive{from{opacity:0;transform:translate(22px,16px) rotate(-5deg) scale(.94)}to{opacity:1;transform:translateY(0) rotate(-12deg)}}
+@keyframes chest-breathe{0%,100%{transform:translateY(0) rotate(-12deg)}50%{transform:translateY(-7px) rotate(-10deg)}}
+@keyframes copy-arrive{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes case-arrive{from{opacity:0;translate:0 15px}to{opacity:1;translate:0 0}}
+@keyframes nav-settle{from{translate:-3px 0}to{translate:0 0}}
+@keyframes dialog-arrive{from{opacity:0;transform:translateY(18px) scale(.975)}to{opacity:1;transform:none}}
+@keyframes case-present{from{opacity:0;transform:translateY(12px) rotate(-4deg) scale(.96)}to{opacity:1;transform:none}}
+@keyframes drop-reveal{from{opacity:0;transform:translateY(15px) scale(.95)}to{opacity:1;transform:none}}
+@keyframes drop-glow{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+@keyframes success-settle{0%{transform:scale(.9)}60%{transform:scale(1.045)}100%{transform:scale(1)}}
+@keyframes failure-settle{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}65%{transform:translateX(3px)}}
+@keyframes energy-pulse{to{opacity:.5;filter:drop-shadow(0 0 5px var(--accent))}}
+@keyframes energy-ring{to{box-shadow:0 0 0 8px color-mix(in srgb,var(--accent) 5%,transparent),0 0 30px color-mix(in srgb,var(--accent) 10%,transparent)}}
+@keyframes winner-lock{from{filter:brightness(1.35);transform:scale(.98)}to{filter:brightness(1);transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal-card{opacity:1;transform:none}}
