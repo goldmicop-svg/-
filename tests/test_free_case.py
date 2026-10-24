@@ -16,8 +16,7 @@ class FreeCaseTests(unittest.TestCase):
         source = Path(__file__).resolve().parents[1]
         shutil.copy2(source / 'app.py', cls.root / 'app.py')
         shutil.copytree(source / 'templates', cls.root / 'templates')
-        shutil.copytree(source / 'static' / 'characters', cls.root / 'static' / 'characters')
-        shutil.copytree(source / 'static' / 'cases', cls.root / 'static' / 'cases')
+        shutil.copytree(source / 'static', cls.root / 'static', ignore=shutil.ignore_patterns('uploads'))
         spec = importlib.util.spec_from_file_location('isolated_meme_case', cls.root / 'app.py')
         cls.module = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = cls.module
@@ -90,6 +89,11 @@ class FreeCaseTests(unittest.TestCase):
         html = self.client.get('/').get_data(as_text=True)
         self.assertIn('Открыть бесплатно', html)
         self.assertIn('Бесплатные', html)
+        with self.client.get('/static/app.css') as response:
+            self.assertEqual(response.status_code, 200)
+        for path in (self.root / 'static' / 'ui').glob('*.svg'):
+            with self.client.get('/static/ui/' + path.name) as response:
+                self.assertEqual(response.status_code, 200)
 
     def test_free_case_requires_login(self):
         self.client.post('/api/logout')
