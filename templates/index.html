@@ -35,7 +35,7 @@ function fmt(n){ return Math.round(n).toLocaleString('ru-RU'); }
 function rColor(rarity){ return `var(--r-${rarity})`; }
 function escapeHtml(value){ return String(value ?? '').replace(/[&<>'"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[c])); }
 function itemVisual(item){
-  return `<img class="item-media" src="${item.image || '/static/ui/spark.svg'}" alt="${escapeHtml(item.name)}" loading="lazy">`;
+  return `<img class="item-media" src="${item.image || '/static/ui/spark.svg'}" alt="${escapeHtml(item.name)}">`;
 }
 function avatarVisual(){
   return `<img class="avatar-img" src="${game.user?.avatar_url || '/static/ui/avatar.svg'}" alt="Аватар ${escapeHtml(game.user?.username || '')}">`;
